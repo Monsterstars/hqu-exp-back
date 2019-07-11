@@ -1,0 +1,16 @@
+
+<script engine="kscript">
+    var list = k.database.student.find("name=='gzk'");
+    var thislist = list.exps;
+    var vv = thislist.split("}");
+    vv.pop();
+    for (var i in vv) {
+        vv[i] = vv[i].substring(2);
+    }
+</script>
+<div k-foreach="try vv">
+    <div k-content="try"></div>
+    <img k-attributes="src try">
+
+</div>
+
