@@ -14,11 +14,6 @@
 var code = "100";
 var msg = "处理失败";
 var obj = {};
-/*var sess = {
-    enterpriseId: 123
-};
-k.session.set("key", sess);*/
-//k.session.clear(); 
 var back = k.session.get("key");
 if (!back) {
     msg = "登陆已过期，请重新登陆";
@@ -27,34 +22,43 @@ if (!back) {
     if (!enterpriseId) {
         msg = "登陆已过期，请重新登陆";
     } else {
-        if (k.request.method == "PUT") { //判断请求是否为put
+        if (k.request.method == "PUT") {
+            //判断请求是否为put
             var mark = k.request.mark;
-            if (mark && k.request.files.length > 0) { //判断是否证明及成绩均传入
-                if (mark >= 0 && mark <= 100) { //判断成绩是否为0至100之间
+            if (mark && k.request.files[0].fileName) {
+                //判断是否证明及成绩均传入
+                if (mark >= 0 && mark <= 100) {
+                    //判断成绩是否为0至100之间
                     var achievementTable = k.database.getTable("stu_achievement");
-                    var achievementId = k.request.achievementId;
-                    var achievement = achievementTable.get(achievementId); //从数据库中获取与achievementId相匹配的achievement
-                    if (achievement) { //判断是否取得achievement
+                    var apply_id = k.request.apply_id;
+                    var achievement = achievementTable.get(apply_id);
+                    //从数据库中获取与apply_id相匹配的achievement
+                    if (achievement) {
+                        //判断是否取得achievement
 
-                        if (!achievement.certificate && !achievement.mark) { //判断数据库中是否有证明和成绩的数据
+                        if (!achievement.certificate && !achievement.mark) {
+                            //判断数据库中是否有证明和成绩的数据
+                            k.file.createFolder("achievement", "");
 
-                            k.file.createFolder(achievementId, k.request.folder);
+                            k.file.createFolder(apply_id, "achievement");
 
-                            for (var i = 0; i < k.request.files.length; i++) { //遍历传入的证明材料
+                            k.file.createFolder("certificate", "achievement\\" + apply_id);
+
+                            for (var i = 0; i < k.request.files.length; i++) {
+                                //遍历传入的证明材料
                                 var file = k.request.files[i];
                                 var filename = file.fileName;
-                                filename = achievementId + "\\" + filename;
-                                file.save(filename); //储存每个证明材料
+                                filename = "achievement\\" + apply_id + "\\certificate\\" + filename;
+                                file.save(filename);
+                                //储存每个证明材料
                             }
 
-                            var allCertificates = k.file.folderFiles(achievementId);
-                            var certificate = "{\"";
+                            var allCertificates = k.file.folderFiles("achievement\\" + apply_id + "\\certificate");
+                            var certificate = allCertificates.map(function (certificate) {
+                                return certificate.absoluteUrl;
+                            }).join('\",\"');
+                            certificate = '[\"'+certificate+'\"]'; 
 
-                            for (var j in allCertificates) { //将每个证明的链接拼接为数组形式
-                                certificate = certificate.concat(allCertificates[j].absoluteUrl, "\",\"");
-                            }
-
-                            certificate = certificate.slice(0, certificate.length - 2).concat("}");
                             achievement.certificate = certificate;
                             achievement.mark = mark;
                             achievementTable.update(achievement);
@@ -62,16 +66,19 @@ if (!back) {
                             code = "200";
                             msg = "处理成功";
                         } else {
+                            //若数据库中有证明和成绩的数据
                             msg = "无法存入重复数据";
                         }
-                    } else { //若未取得achievement
+                    } else {
+                        //若未取得achievement
                         msg = "未取得记录";
                     }
-                } else { //若成绩不在0至100之间
+                } else {
+                    //若成绩不在0至100之间
                     msg = "成绩格式不正确";
                 }
-
-            } else { //若未传入全部证明及成绩
+            } else {
+                //若未传入全部证明及成绩
                 msg = "未传入全部数据";
             }
         }

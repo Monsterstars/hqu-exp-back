@@ -36,11 +36,11 @@ if (k.request.method == 'POST') {
                      k.session.set("key", sess);
                 } else {
                     //密码不匹配                   
-                    msg = "密码错误";
+                    msg = "用户邮箱或密码错误";
                 }
             } else {
                 //用户不存在               
-                msg = "用户不存在";
+                msg = "用户邮箱或密码错误";
             }
         } else {
             //未输入密码           
