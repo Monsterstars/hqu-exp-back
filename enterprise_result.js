@@ -38,11 +38,7 @@ if (!back) {
 
                         if (!achievement.certificate && !achievement.mark) {
                             //判断数据库中是否有证明和成绩的数据
-                            k.file.createFolder("achievement", "");
-
-                            k.file.createFolder(apply_id, "achievement");
-
-                            k.file.createFolder("certificate", "achievement\\" + apply_id);
+                            k.file.createFolder("achievement\\" + apply_id + "\\certificate", "");
 
                             for (var i = 0; i < k.request.files.length; i++) {
                                 //遍历传入的证明材料
@@ -57,7 +53,7 @@ if (!back) {
                             var certificate = allCertificates.map(function (certificate) {
                                 return certificate.absoluteUrl;
                             }).join('\",\"');
-                            certificate = '[\"'+certificate+'\"]'; 
+                            certificate = '[\"' + certificate + '\"]';
 
                             achievement.certificate = certificate;
                             achievement.mark = mark;
