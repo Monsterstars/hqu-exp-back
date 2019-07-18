@@ -1,0 +1,82 @@
+/**
+ * 企业发布实训结果api
+ * 1、设置code为100，msg为“处理失败”
+ * 2、判断请求是否为put
+ * 3、若请求正确，判断证明及成绩是否均传入，若未传入则  msg 设为 "未传入全部数据";
+ * 4、若传入，则判断成绩是否为0至100之间，若成绩格式不正确则  msg 设为 "成绩格式不正确";
+ * 5、若正确，则从数据库中获取achievement，判断是否取得，若未获取到  msg 设为 "未取得记录";
+ * 6、若取得，则储存每条证明信息，并将路径拼接为数组形式存入数据库，同时将mark数据存入数据库
+ * 7、存入数据库后将code 设为 "200"， msg 设为 "处理成功";
+ * 8、将code与msg赋给obj
+ * 9、返回json
+ */
+
+var code = "100";
+var msg = "处理失败";
+var obj = {};
+/*var sess = {
+    enterpriseId: 123
+};
+k.session.set("key", sess);*/
+//k.session.clear(); 
+var back = k.session.get("key");
+if (!back) {
+    msg = "登陆已过期，请重新登陆";
+} else {
+    var enterpriseId = back.enterpriseId;
+    if (!enterpriseId) {
+        msg = "登陆已过期，请重新登陆";
+    } else {
+        if (k.request.method == "PUT") { //判断请求是否为put
+            var mark = k.request.mark;
+            if (mark && k.request.files.length > 0) { //判断是否证明及成绩均传入
+                if (mark >= 0 && mark <= 100) { //判断成绩是否为0至100之间
+                    var achievementTable = k.database.getTable("stu_achievement");
+                    var achievementId = k.request.achievementId;
+                    var achievement = achievementTable.get(achievementId); //从数据库中获取与achievementId相匹配的achievement
+                    if (achievement) { //判断是否取得achievement
+
+                        if (!achievement.certificate && !achievement.mark) { //判断数据库中是否有证明和成绩的数据
+
+                            k.file.createFolder(achievementId, k.request.folder);
+
+                            for (var i = 0; i < k.request.files.length; i++) { //遍历传入的证明材料
+                                var file = k.request.files[i];
+                                var filename = file.fileName;
+                                filename = achievementId + "\\" + filename;
+                                file.save(filename); //储存每个证明材料
+                            }
+
+                            var allCertificates = k.file.folderFiles(achievementId);
+                            var certificate = "{\"";
+
+                            for (var j in allCertificates) { //将每个证明的链接拼接为数组形式
+                                certificate = certificate.concat(allCertificates[j].absoluteUrl, "\",\"");
+                            }
+
+                            certificate = certificate.slice(0, certificate.length - 2).concat("}");
+                            achievement.certificate = certificate;
+                            achievement.mark = mark;
+                            achievementTable.update(achievement);
+
+                            code = "200";
+                            msg = "处理成功";
+                        } else {
+                            msg = "无法存入重复数据";
+                        }
+                    } else { //若未取得achievement
+                        msg = "未取得记录";
+                    }
+                } else { //若成绩不在0至100之间
+                    msg = "成绩格式不正确";
+                }
+
+            } else { //若未传入全部证明及成绩
+                msg = "未传入全部数据";
+            }
+        }
+    }
+}
+obj.code = code;
+obj.msg = msg;
+k.response.json(obj);
