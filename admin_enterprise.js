@@ -1,5 +1,5 @@
 /**
- * 查询企业详细信息及审核企业的api
+ * 学校查询企业详细信息及审核企业的api
  * 1、设置code为100，msg为“查询失败”，data为null
  * 2、判断请求类型
  * 3、获取传入的enterpriseId
@@ -12,18 +12,13 @@
 var code = "100";
 var msg = "处理失败";
 var obj = {};
-var sess = {
-    adminId: 123
-};
-k.session.set("key", sess);
-//k.session.clear(); 
 var back = k.session.get("key");
 if (!back) {
-    msg = "1登陆已过期，请重新登陆";
+    msg = "登陆已过期，请重新登陆";
 } else {
     var adminId = back.adminId;
     if (!adminId) {
-        msg = "2登陆已过期，请重新登陆";
+        msg = "登陆已过期，请重新登陆";
     } else {
         if (k.request.method == "GET") {
             //判断是否为get请求
@@ -36,6 +31,8 @@ if (!back) {
                 msg = "查询成功";
                 enterprise.password = "*********"; //隐藏密码
                 obj.data = enterprise;
+            }else{
+            	msg = "企业信息不存在";
             }
         } else if (k.request.method == "PUT") {
             //判断是否为put请求
@@ -59,7 +56,7 @@ if (!back) {
                     }
                 } else {
                     //else未取得enterpriseId相匹配的数据
-                    msg = "企业id错误";
+                    msg = "企业信息不存在";
                 }
             } else {
                 //else更改状态错误
