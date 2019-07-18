@@ -4,34 +4,34 @@ var code = "100";
 var msg = "处理失败";
 
 if (k.request.method == "POST") {
-    var appyId = k.request.apply_id;
-    //var appyId = "ca09d708-8f11-0165-93e2-7578528d99f1";
-    var achievement = k.database.stu_achievement.get(appyId);
+    var applyId = k.request.apply_id;
+    //var applyId = "ca09d708-8f11-0165-93e2-7578528d99f1";
+    var achievement = k.database.stu_achievement.get(applyId);
     if (achievement) {
         if (k.request.files.length > 0) {
-            k.file.createFolder("achievement", k.request.folder);
-            k.file.createFolder(appyId, "achievement");
-            k.file.createFolder("perception", appyId);
+            if (k.request.files[0].fileName != "") {
+                k.file.createFolder("achievement\\" + applyId + "\\perception", k.request.folder);
 
-            for (var i = 0; i < k.request.files.length; i++) {
-                var file = k.request.files[i];
-                var filename = file.fileName;
-                filename = "achievement\\" + appyId + "\\perception\\" + filename;
-                file.save(filename); //储存心得文件
+                for (var i = 0; i < k.request.files.length; i++) {
+                    var file = k.request.files[i];
+                    var filename = file.fileName;
+                    filename = "achievement\\" + applyId + "\\perception\\" + filename;
+                    file.save(filename); //储存心得文件
+                }
+                var allPerception = k.file.folderFiles("achievement\\" + applyId + "\\perception");
+                var perception = allPerception.map(function (perception) {
+                    return perception.absoluteUrl
+                }).join('\",\"');
+                perception = "[\"" + perception + "\"]";
+                achievement.perception = perception;
+                k.database.stu_achievement.update(achievement);
+                code = "200";
+                msg = "处理成功";
             }
-            var allPerception = k.file.folderFiles("achievement\\" + appyId + "\\perception");
-            var perception = allPerception.map(function(perception){
-                return perception.absoluteUrl
-            }).join('\",\"');
-            perception = "[\""+perception+"\"]";
-            achievement.perception = perception;
-            k.database.stu_achievement.update(achievement);
-            code = "200";
-            msg = "处理成功";
-        }{
-            msg = "未上传文件";
+        } else {
+            msg = "没有上传文件";
         }
-    }else{
+    } else {
         msg = "没有改申请记录";
     }
 
