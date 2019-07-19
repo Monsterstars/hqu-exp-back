@@ -8,7 +8,7 @@ if(k.request.method == 'GET'){
     }
     else{
         var table = k.database.getTable("internship_detail");
-        var internship_detail = table.all();
+        var internship_detail = table.find("enterprise_id",expId);
         var obj = {code:"200", msg:"查询成功",data:internship_detail};
         k.response.json(obj);
     }
