@@ -13,3 +13,7 @@ if(k.request.method == 'GET'){
         k.response.json(obj);
     }
 }
+else{
+    var obj = {code:"100",msg:"method not found"}
+    k.response.json(obj);
+}
