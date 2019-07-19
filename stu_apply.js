@@ -8,11 +8,13 @@ if(k.request.method == 'POST'){
     	var obj = {code:"100", msg:"登陆已过期，请重新登陆"};
         k.response.json(obj);
     }
-    var table = k.database.getTable("stu_apply");
-    var obj = {stu_id: stu_id, id: id, apply_status: status};
-    table.add(obj);  
-    var obj = {code:"200", msg:"处理成功"};
-    k.response.json(obj);
+    else{
+        var table = k.database.getTable("stu_apply");
+        var obj = {stu_id: stu_id, id: id, apply_status: status};
+        table.add(obj);  
+        var obj = {code:"200", msg:"处理成功"};
+        k.response.json(obj);
+    }
 }
 if(k.request.method == 'GET'){
 	var back = k.session.get("key");
