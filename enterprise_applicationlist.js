@@ -8,7 +8,7 @@ var obj = {};
 if (k.request.method == "GET") {
     var internshipId = k.request.internshipId;
     var page = k.request.page;
-    var apply = k.database.stu_apply.query("exp_id == " + internshipId).skip((page - 1) * 10).take(10);
+    var apply = k.database.stu_apply.query("exp_id == " + internshipId).orderByDescending("submit_time").skip((page - 1) * 10).take(10);
 
     if (apply) {
         for (var i = 0; i < apply.length; i++) {

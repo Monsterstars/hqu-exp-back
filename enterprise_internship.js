@@ -125,10 +125,9 @@ if (!back) {
                 msg = "enterprise not exit";
             }
         }
-
-        obj.code = code;
-        obj.msg = msg;
-        obj.data = data;
-        k.response.json(obj);
     }
+    obj.code = code;
+    obj.msg = msg;
+    obj.data = data;
 }
+k.response.json(obj);

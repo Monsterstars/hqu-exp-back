@@ -13,7 +13,7 @@ if (k.request.method == GET) {
         msg: "success",
     };
     if (status) {
-        var querylist = table.query().where("status==" + status).skip((page - 1) * 10).take(10);
+        var querylist = table.query().where("status==" + status).skip((page - 1) * 10).orderByDescending("register_time").take(10);
         if (!querylist) {
             reobj.code = 100;
             reobj.msg = "fail";

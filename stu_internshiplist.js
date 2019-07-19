@@ -21,7 +21,7 @@ if (k.request.method == 'GET') {
                 page = 1;
             }
             var table = k.database.getTable("internship_detail");
-            var internship_detail = table.query().skip((page - 1) * 10).take(10);
+            var internship_detail = table.query().orderByDescending("exp_modify_time").skip((page - 1) * 10).take(10);
             for (var i = 0; i < internship_detail.length; i++) {
                 var enterpriseTable = k.database.getTable("enterprise");
                 var enterprise = enterpriseTable.get(internship_detail[i].enterprise_id);

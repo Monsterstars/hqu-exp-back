@@ -15,16 +15,16 @@ if (!back) {
     } else {
         if (k.request.method == "GET") {
             var page = k.request.page;
-            var internship = k.database.internship_detail.query("enterprise_id ==" + enterpriseId).skip((page - 1) * 2).take(2);
+            var internship = k.database.internship_detail.query("enterprise_id ==" + enterpriseId).orderByDescending("exp_modify_time").skip((page - 1) * 10).take(10);
             for (var i = 0; i < internship.length; i++) {
                 data.push(internship[i]);
             }
             code = "200";
             msg = "处理成功";
         }
-        obj.code = code;
-        obj.msg = msg;
-        obj.data = data;
-        k.response.json(obj);
     }
+    obj.code = code;
+    obj.msg = msg;
+    obj.data = data;
 }
+k.response.json(obj);
