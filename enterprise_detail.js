@@ -1,23 +1,23 @@
-//»ñµÃµ±Ç°µÇÂ¼µÄÆóÒµĞÅÏ¢
-//²éÑ¯ÆóÒµĞÅÏ¢api
+//è·å¾—å½“å‰ç™»å½•çš„ä¼ä¸šä¿¡æ¯
+//æŸ¥è¯¢ä¼ä¸šä¿¡æ¯api
 var code = "100";
-var msg = "´¦ÀíÊ§°Ü";
+var msg = "å¤„ç†å¤±è´¥";
 var data = null;
 var obj = {};
 var back = k.session.get("key");
 var enterpriseId = back.enterpriseId;
 if (back) {
-    if (enterpriseId) { //ÅĞ¶Ïµ±Ç°ÓÃ»§ÊÇ·ñÎªÆóÒµ
-        if (k.request.method == "GET") { //ÅĞ¶ÏGET·½·¨
+    if (enterpriseId) { //åˆ¤æ–­å½“å‰ç”¨æˆ·æ˜¯å¦ä¸ºä¼ä¸š
+        if (k.request.method == "GET") { //åˆ¤æ–­GETæ–¹æ³•
             var enterprise = k.database.enterprise.get(enterpriseId);
             if (enterprise) {
                 code = "200";
-                msg = "ÇëÇó³É¹¦";
+                msg = "è¯·æ±‚æˆåŠŸ";
                 //delete enterprise['password'];
                 data = enterprise;
             } else {
                 code = "100";
-                msg = "ÆóÒµ²»´æÔÚ";
+                msg = "ä¼ä¸šä¸å­˜åœ¨";
             }
         } else {
             code = "100";
@@ -25,7 +25,7 @@ if (back) {
         }
     }
 } else {
-    msg = "µÇÂ¼ÒÑ¹ıÆÚ£¬ÇëÖØĞÂµÇÂ¼";
+    msg = "ç™»å½•å·²è¿‡æœŸï¼Œè¯·é‡æ–°ç™»å½•";
 }
 obj.code = code;
 obj.msg = msg;
