@@ -1,6 +1,8 @@
 var code = "100";
 var msg = "处理失败";
 var obj = {};
+var sessionObj = {studentId: 1725121008};
+k.session.set("key", sessionObj);
 if (k.request.method == 'GET') {
     //判断是否为“GET”请求
     var back = k.session.get("key");
@@ -19,7 +21,7 @@ if (k.request.method == 'GET') {
                 page = 1;
             }
             var table = k.database.getTable("internship_detail");
-            var internship_detail = table.query().orderByDescending("exp_modify_time").skip((page - 1) * 10).take(10);//每页有10个数据，取的页码后跳过(page-1)*10个数据向后取
+            var internship_detail = table.query("status == 1").skip((page - 1) * 10).take(10);//每页有10个数据，取的页码后跳过(page-1)*10个数据向后取
             for (var i = 0; i < internship_detail.length; i++) {
                 var enterpriseTable = k.database.getTable("enterprise");
                 var enterprise = enterpriseTable.get(internship_detail[i].enterprise_id); //根据每条数据的enterprise_id，从enterprise数据库查得相对应数据
@@ -27,7 +29,6 @@ if (k.request.method == 'GET') {
                     internship_detail[i].enterprise = enterprise.name;
                 }
             }
-
             code = "200";
             msg = "查询成功";
             obj.data = internship_detail;
