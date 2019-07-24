@@ -25,6 +25,11 @@ if (k.request.method == "POST") {
                 perception = "[\"" + perception + "\"]";
                 achievement.perception = perception;
                 k.database.stu_achievement.update(achievement);
+                if(achievement.mark!=""&&achievement.certificate!=""&&achievement.work_url!=""){
+                    var apply = k.database.stu_apply.get(applyId);
+                    apply.apply_status = 6;
+                    k.database.stu_apply.update(apply);
+                }
                 code = "200";
                 msg = "处理成功";
             }
