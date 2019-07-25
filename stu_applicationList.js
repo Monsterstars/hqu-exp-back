@@ -19,11 +19,20 @@ if (k.request.method == "GET") {
     } else {
       var status = k.request.status;
       var page = k.request.page;
-      var stuApply = k.database.stu_apply
-        .query("stu_id ==" + stuId && "apply_status ==" + status)
-        .orderByDescending("submit_time")
-        .skip((page - 1) * 10)
-        .take(10);
+      if (!status) {
+        //没有传入status
+        var stuApply = k.database.stu_apply
+          .query("stu_id ==" + stuId)
+          .orderByDescending("apply_status")
+          .skip((page - 1) * 10)
+          .take(10);
+      } else {
+        var stuApply = k.database.stu_apply
+          .query("stu_id ==" + stuId && "apply_status ==" + status)
+          .orderByDescending("submit_time")
+          .skip((page - 1) * 10)
+          .take(10);
+      }
       if (stuApply) {
         data = stuApply;
         code = "200";
