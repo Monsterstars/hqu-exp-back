@@ -42,8 +42,8 @@ if (k.request.method == "GET") {
       }
     }
   }
-  obj.code = code;
-  obj.msg = msg;
-  obj.data = data;
-  k.response.json(obj);
 }
+obj.code = code;
+obj.msg = msg;
+obj.data = data;
+k.response.json(obj);

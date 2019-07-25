@@ -41,8 +41,9 @@ if (!back) {
       }
     }
   }
-  obj.code = code;
-  obj.msg = msg;
-  obj.data = data;
 }
+obj.code = code;
+obj.msg = msg;
+obj.data = data;
+
 k.response.json(obj);
