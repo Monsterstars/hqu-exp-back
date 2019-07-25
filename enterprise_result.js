@@ -54,10 +54,19 @@ if (!back) {
                                 return certificate.absoluteUrl;
                             }).join('\",\"');
                             certificate = '[\"' + certificate + '\"]';
-
                             achievement.certificate = certificate;
                             achievement.mark = mark;
                             achievementTable.update(achievement);
+
+                            if (achievement.perception != "" && achievement.work_url != "") {
+                                //判断企业结业结果和学生解也结果是否均传入
+                                var apply = k.database.stu_apply.get(apply_id);
+                                if (apply && apply.apply_status == 4) {
+                                    //若均有则将状态改为结业（6）
+                                    apply.apply_status = 6;
+                                    k.database.stu_apply.update(apply);
+                                }
+                            }
 
                             code = "200";
                             msg = "处理成功";
